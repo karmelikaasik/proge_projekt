@@ -67,53 +67,78 @@ def ringvoirist(ringvrist, ruut):
         rist(ruut)
         return "ring"
 
-def võitmine(grid):
+def m2ngl2bi(grid):
+    mängläbi = False
     võitja = False
-    for i in range(len(grid)):
-        if grid[i] != False:
-            if i%3==0 and grid[i] == grid[i+1] and grid[i] == grid[i+2]:
-                võitja = True
-                if i == 3:
-                    i = 1
-                if i == 6:
-                    i = 2
-                pygame.draw.line(display, kollane, (50,100+(100*i)), (350, 100+(100*i)),5)
-            if i<3 and grid[i] == grid[i+3] and grid[i] == grid[i+6]:
-                võitja = True
-                pygame.draw.line(display, kollane, (100 + (100 * i),50), (100 + (100 * i),350), 5)
-            if i == 4:
-                if grid[i] == grid[i-2] and grid[i] == grid[i+2]:
+    viik = False
+    põhjus = None
+    if mängläbi == False:
+        print("Mängläbi == False")
+        viik = True
+        for i in range(len(grid)):
+            if grid[i] != False:
+                if i%3==0 and grid[i] == grid[i+1] and grid[i] == grid[i+2]:
                     võitja = True
-                    pygame.draw.line(display, kollane, (350,50), (50,350), 7)
-                if grid[i] == grid[i-4] and grid[i] == grid[i+4]:
+                    if i == 3:
+                        i = 1
+                    if i == 6:
+                        i = 2
+                    pygame.draw.line(display, kollane, (50,100+(100*i)), (350, 100+(100*i)),5)
+                if i<3 and grid[i] == grid[i+3] and grid[i] == grid[i+6]:
                     võitja = True
-                    pygame.draw.line(display, kollane, (50, 50), (350, 350), 7)
-    return võitja
+                    pygame.draw.line(display, kollane, (100 + (100 * i),50), (100 + (100 * i),350), 5)
+                if i == 4:
+                    if grid[i] == grid[i-2] and grid[i] == grid[i+2]:
+                        võitja = True
+                        pygame.draw.line(display, kollane, (350,50), (50,350), 7)
+                    if grid[i] == grid[i-4] and grid[i] == grid[i+4]:
+                        võitja = True
+                        pygame.draw.line(display, kollane, (50, 50), (350, 350), 7)
+            elif grid[i] == False:
+                viik = False
+        if võitja == True:
+            print("Võitja")
+            mängläbi = True
+            põhjus = "võitja"
+        elif viik == True:
+            print("viik")
+            mängläbi = True
+            põhjus = "viik"
+
+
+    return mängläbi, põhjus
 
 def mängu_lõpp():
     pygame.font.init()
     myfont = pygame.font.SysFont('Comic Sans MS', 30)
-    if ringvrist == "rist":
-        textsurface = myfont.render(("Võitja on "+ "ring"), False, must, valge)
-    if ringvrist == "ring":
-        textsurface = myfont.render(("Võitja on " + "rist"), False, must, valge)
+    if m2ngl2bi(grid)[1] == "võitja":
+        if ringvrist == "rist":
+            textsurface = myfont.render(("Võitja on "+ "ring"), False, must, valge)
+        if ringvrist == "ring":
+            textsurface = myfont.render(("Võitja on " + "rist"), False, must, valge)
+    elif m2ngl2bi(grid)[1] == "viik":
+        textsurface = myfont.render(("VIIK"), False, must, valge)
+    else:
+        textsurface = myfont.render(("bigerror"), False, punane, valge)
     textRect = textsurface.get_rect()
     textRect.center = (pikkus // 2, 50)
     display.blit(textsurface, textRect)
 
 jooned()
 ringvrist = "rist"
+mängulõpp = False
 while lõpp == False:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             lõpp = True
         if event.type == pygame.MOUSEBUTTONDOWN:
             ruut = hiire_asukoht()
-            if grid[ruut-1] == False:
+            if grid[ruut-1] == False and mängulõpp == False:
                 ringvoirist(ringvrist, hiire_asukoht())
                 ringvrist = ringvoirist(ringvrist, hiire_asukoht())
                 grid[ruut-1] = ringvrist
-                if võitmine(grid) == True:
+                if m2ngl2bi(grid)[0] == True:
+                    mängulõpp = True
                     mängu_lõpp()
 
 
