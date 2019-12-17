@@ -40,12 +40,26 @@ display.blit(textsurface2, textRect2)
 
 
 def hiir_nupul():
-    return None
+    mitmes = None
+    mouse_x = pygame.mouse.get_pos()[0]
+    mouse_y = pygame.mouse.get_pos()[1]
+    if mouse_x >=100 and mouse_x <= 200:
+        if mouse_y <= 180 and mouse_y >= 100 and pygame.mouse.get_pressed()[0]==1:
+            mitmes = "esiemene"
+        if mouse_y >= 200 and mouse_y <= 280 and pygame.mouse.get_pressed()[0]==1:
+            mitmes = "teine"
+        if mouse_y >= 300 and mouse_y <= 380 and pygame.mouse.get_pressed()[0]==1:
+            mitmes = "kolmas"
+    return mitmes
+
 
 while lõpp == False:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             lõpp = True
+        if hiir_nupul() == "kolmas":
+            lõpp = True
+
 
     pygame.display.update()
 
