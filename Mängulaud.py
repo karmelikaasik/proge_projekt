@@ -15,18 +15,6 @@ class Mängulaud():
         self.grid = grid
         self.lõpp = lõpp
 
-    def mangulaud(self):
-        display = pygame.display.set_mode((self.laius, self.pikkus))
-        return display
-
-    def jooned(self, display):
-        a = display.fill(self.taustvärv)
-        b = pygame.draw.line(display, self.gridvärv, (150,50), (150,350), 5)
-        c = pygame.draw.line(display, self.gridvärv, (250, 50), (250, 350), 5)
-        d = pygame.draw.line(display, self.gridvärv, (50, 150), (350, 150), 5)
-        e = pygame.draw.line(display, self.gridvärv, (50, 250), (350, 250), 5)
-        f = pygame.display.update()
-        return a,b,c,d,e,f
 
     def rist(self, ruut, display):
         if ruut != 0:
@@ -58,12 +46,12 @@ class Mängulaud():
         else:
             return 0
 
-    def ringvoirist(self, ringvrist, ruut):
+    def ringvoirist(self, ringvrist, ruut, display):
         if ringvrist == "ring":
-            self.ring(ruut, self.mangulaud())
+            self.ring(ruut, display)
             return "rist"
         elif ringvrist == "rist":
-            self.rist(ruut, self.mangulaud())
+            self.rist(ruut, display)
             return "ring"
 
     def m2ngl2bi(self, grid, display):
@@ -110,12 +98,12 @@ class Mängulaud():
         punane = [255,51,51]
         pygame.font.init()
         myfont = pygame.font.SysFont('Comic Sans MS', 30)
-        if self.m2ngl2bi(self.grid, self.mangulaud())[1] == "võitja":
+        if self.m2ngl2bi(self.grid, display)[1] == "võitja":
             if ringvrist == "rist":
                 textsurface = myfont.render(("Võitja on "+ "ring"), False, must, valge)
             if ringvrist == "ring":
                 textsurface = myfont.render(("Võitja on " + "rist"), False, must, valge)
-        elif self.m2ngl2bi(self.grid, self.mangulaud())[1] == "viik":
+        elif self.m2ngl2bi(self.grid, display)[1] == "viik":
             textsurface = myfont.render(("VIIK"), False, must, valge)
         else:
             textsurface = myfont.render(("bigerror"), False, punane, valge)
@@ -123,9 +111,15 @@ class Mängulaud():
         textRect.center = (self.pikkus // 2, 50)
         display.blit(textsurface, textRect)
 
+
     def mäng(self):
         pygame.display.set_caption("Trips-traps-trull")
-        self.jooned(self.mangulaud())
+        display = pygame.display.set_mode((self.laius, self.pikkus))
+        display.fill(self.taustvärv)
+        pygame.draw.line(display, self.gridvärv, (150,50), (150,350), 5)
+        pygame.draw.line(display, self.gridvärv, (250, 50), (250, 350), 5)
+        pygame.draw.line(display, self.gridvärv, (50, 150), (350, 150), 5)
+        pygame.draw.line(display, self.gridvärv, (50, 250), (350, 250), 5)
         ringvrist = "rist"
         mängulõpp = False
         pygame.display.update()
@@ -136,13 +130,14 @@ class Mängulaud():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     ruut = self.hiire_asukoht()
                     if self.grid[ruut-1] == False and mängulõpp == False:
-                        pygame.display.flip()
-                        self.ringvoirist(ringvrist, self.hiire_asukoht())
-                        ringvrist = self.ringvoirist(ringvrist, self.hiire_asukoht())
+                        pygame.display.update()
+                        self.ringvoirist(ringvrist, self.hiire_asukoht(),display)
+                        ringvrist = self.ringvoirist(ringvrist, self.hiire_asukoht(),display)
                         self.grid[ruut-1] = ringvrist
-                        if self.m2ngl2bi(self.grid, self.mangulaud())[0] == True:
+                        if self.m2ngl2bi(self.grid, display)[0] == True:
                             mängulõpp = True
-                            self.mängu_lõpp(ringvrist, self.mangulaud())
+                            self.mängu_lõpp(ringvrist, display)
+
 
 
 
