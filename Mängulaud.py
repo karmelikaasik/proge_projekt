@@ -1,10 +1,16 @@
 import pygame
 pygame.init()
-
+hall = [128,128,128]
+punane = [255,51,51]
+must = [0,0,0]
+sinine = [51,122,255]
+kollane = [255,255,51]
+roheline =[91,255, 51]
+valge = [255,255,255]
 
 class Mängulaud():
 
-    def __init__(self, laius, pikkus, taustvärv, gridvärv, ristvärv, ringvärv, joonevärv, grid, lõpp):
+    def __init__(self, laius, pikkus, taustvärv, gridvärv, ristvärv, ringvärv, joonevärv, grid, tagasi, lõpp):
         self.laius = laius
         self.pikkus = pikkus
         self.taustvärv = taustvärv
@@ -13,8 +19,14 @@ class Mängulaud():
         self.ringvärv = ringvärv
         self.joonevärv = joonevärv
         self.grid = grid
+        self.tagasi = tagasi
         self.lõpp = lõpp
 
+    def setGrid(self, grid):
+        self.grid = grid
+
+    def setMärk(self, märk):
+        self.märk = märk
 
     def rist(self, ruut, display):
         if ruut != 0:
@@ -92,6 +104,34 @@ class Mängulaud():
 
         return mängläbi, põhjus
 
+    def hiir_nupul(self):
+        mitmes = None
+        mouse_x = pygame.mouse.get_pos()[0]
+        mouse_y = pygame.mouse.get_pos()[1]
+        if mouse_y >= 160 and mouse_y <= 210:
+            if mouse_x >= 130 and mouse_x <= 190 and pygame.mouse.get_pressed()[0] == 1:
+                mitmes = "esimene"
+            if mouse_x >= 210 and mouse_x <= 270 and pygame.mouse.get_pressed()[0] == 1:
+                mitmes = "teine"
+        return mitmes
+
+    def kas_uuesti(self, display):
+        pygame.draw.rect(display, valge, (100, 100, 200, 150))
+        jah_kast = pygame.draw.rect(display, must, (130, 160, 60, 50))
+        ei_kast = pygame.draw.rect(display, must, (210, 160, 60, 50))
+        pygame.font.init()
+        myfont = pygame.font.SysFont('Comic Sans MS', 20)
+        textsurface = myfont.render(("Kas mängida uuesti?"), False, must)
+        textRect = textsurface.get_rect()
+        textRect.center = (self.pikkus // 2, 120)
+        display.blit(textsurface, textRect)
+        textsurface = myfont.render("JAH", False, valge)
+        textRect = jah_kast
+        display.blit(textsurface, textRect)
+        textsurface = myfont.render("EI", False, valge)
+        textRect = ei_kast
+        display.blit(textsurface, textRect)
+
     def mängu_lõpp(self, ringvrist, display):
         must = [0,0,0]
         valge = [255,255,255]
@@ -112,7 +152,8 @@ class Mängulaud():
         display.blit(textsurface, textRect)
 
 
-    def mäng(self):
+
+    def mäng(self, märk):
         pygame.display.set_caption("Trips-traps-trull")
         display = pygame.display.set_mode((self.laius, self.pikkus))
         display.fill(self.taustvärv)
@@ -120,7 +161,8 @@ class Mängulaud():
         pygame.draw.line(display, self.gridvärv, (250, 50), (250, 350), 5)
         pygame.draw.line(display, self.gridvärv, (50, 150), (350, 150), 5)
         pygame.draw.line(display, self.gridvärv, (50, 250), (350, 250), 5)
-        ringvrist = "rist"
+        ringvrist = märk
+        print(ringvrist)
         mängulõpp = False
         pygame.display.update()
         while self.lõpp == False:
@@ -137,7 +179,18 @@ class Mängulaud():
                         if self.m2ngl2bi(self.grid, display)[0] == True:
                             mängulõpp = True
                             self.mängu_lõpp(ringvrist, display)
+                            self.kas_uuesti(display)
+                if self.hiir_nupul() == "esimene" and mängulõpp == True:
+                    self.setGrid([False, False, False,
+                                  False, False, False,
+                                  False, False, False])
+                    self.mäng(märk)
+                    pygame.init()
 
+                if self.hiir_nupul() == "teine" and mängulõpp == True:
+                    self.tagasi = True
+                    self.lõpp = True
+                    pygame.init()
 
 
 
@@ -147,10 +200,3 @@ class Mängulaud():
         pygame.quit()
 
 
-hall = [128,128,128]
-punane = [255,51,51]
-must = [0,0,0]
-sinine = [51,122,255]
-kollane = [255,255,51]
-roheline =[91,255, 51]
-valge = [255,255,255]
