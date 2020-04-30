@@ -11,13 +11,30 @@ def runmain():
     display = pygame.display.set_mode((laius, pikkus))
     pygame.display.set_caption("Peamenüü")
 
-    display.fill(kollane)
+    display.fill(hall)
 
-    pygame.draw.rect(display, must, (100,100,200, 80))
     pygame.draw.rect(display, must, (100,200,200, 80))
     pygame.draw.rect(display, must, (100,300,200, 80))
     pygame.font.init()
     myfont = pygame.font.SysFont('Comic Sans MS', 40)
+
+    """def hiirkohal():
+        mouse_x = pygame.mouse.get_pos()[0]
+        mouse_y = pygame.mouse.get_pos()[1]
+        if mouse_x >=100 and mouse_x <= 300:
+            if mouse_y >= 100 and mouse_y <= 180:
+                #siia tuleb see, et ta näitab, kes mängivad
+                print("yeet")
+        else:
+            pygame.draw.rect(display, must, (100, 100, 200, 80))
+            textsurface = myfont.render(("MÄNGI"), False, punane)
+            textRect = textsurface.get_rect()
+            textRect.center = (pikkus // 2, 140)
+            display.blit(textsurface, textRect)
+
+    hiirkohal()"""
+
+    pygame.draw.rect(display, must, (100, 100, 200, 80))
     textsurface = myfont.render(("MÄNGI"), False, punane)
     textRect = textsurface.get_rect()
     textRect.center = (pikkus // 2, 140)
@@ -33,10 +50,6 @@ def runmain():
     textRect2.center = (pikkus // 2, 340)
     display.blit(textsurface2, textRect2)
 
-    b = seaded(sinine, valge, False, "Alustab: X")
-    a = Mängulaud(400, 400, hall, punane, valge, valge, valge, [False, False, False,
-                                                                False, False, False,
-                                                                False, False, False], False, False)
 
     def hiir_nupul():
         mitmes = None
@@ -54,9 +67,13 @@ def runmain():
                 mitmes = "välju"
         return mitmes
 
-    lõpp = False
-    menüü = True
 
+    lõpp = False
+    b = seaded(hall, valge, False, "Alustab: O", "pvp")
+    a = Mängulaud(400, 400, hall, punane, valge, valge, valge, [False, False, False,
+                                                                False, False, False,
+                                                                False, False, False], False, False)
+    menüü = True
     while lõpp == False:
         for event in pygame.event.get():
             pygame.display.update()
@@ -70,10 +87,10 @@ def runmain():
                     b.run()
                 if hiir_nupul() == "mängi":
                     menüü = False
-                    print(b.kasvahetada())
-                    if b.kasvahetada() == "Alustab: O":
+                    print(b.ristvõiring())
+                    if b.ristvõiring() == "Alustab: O":
                         märk = "ring"
-                    elif b.kasvahetada() == "Alustab: X":
+                    elif b.ristvõiring() == "Alustab: X":
                         märk = "rist"
                     a.mäng(märk)
 
