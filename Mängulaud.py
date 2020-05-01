@@ -4,13 +4,12 @@ from värvid import *
 
 class Mängulaud():
 
-    def __init__(self, laius, pikkus, taustvärv, gridvärv, ristvärv, ringvärv, joonevärv, grid, tagasi, lõpp):
+    def __init__(self, laius, pikkus, gridvärv, ristvärv, ringvärv, joonevärv, grid, tagasi, lõpp):
         self.laius = laius
         self.pikkus = pikkus
-        self.taustvärv = taustvärv
-        self.gridvärv = gridvärv
         self.ristvärv = ristvärv
         self.ringvärv = ringvärv
+        self.gridvärv = gridvärv
         self.joonevärv = joonevärv
         self.grid = grid
         self.tagasi = tagasi
@@ -19,16 +18,16 @@ class Mängulaud():
     def setGrid(self, grid):
         self.grid = grid
 
-    def rist(self, ruut, display):
+    def rist(self, ruut, display, nupuvärv):
         if ruut != 0:
             x_koordinaat = int(50 + (((ruut + 2) % 3) * 100))
             y_koordinaat = int(50 + (((ruut - ruut % 3) / 3) * 100))
             if ruut%3 == 0:
                 y_koordinaat = 50 + ((ruut/3)-1)*100
-            pygame.draw.line(display, self.ristvärv, (x_koordinaat, y_koordinaat), (x_koordinaat+100, y_koordinaat+100), 5)
-            pygame.draw.line(display, self.ristvärv, (x_koordinaat, y_koordinaat+100), (x_koordinaat+100, y_koordinaat),5)
+            pygame.draw.line(display, nupuvärv, (x_koordinaat, y_koordinaat), (x_koordinaat+100, y_koordinaat+100), 5)
+            pygame.draw.line(display, nupuvärv, (x_koordinaat, y_koordinaat+100), (x_koordinaat+100, y_koordinaat),5)
 
-    def ring(self, ruut, display):
+    def ring(self, ruut, display, nupuvärv):
         if ruut != 0:
             x_koordinaat = int(50 + (((ruut + 2) % 3) * 100))
             y_koordinaat = int(50 + (((ruut - ruut % 3) / 3) * 100))
@@ -36,7 +35,7 @@ class Mängulaud():
                 y_koordinaat = int(50 + ((ruut/3)-1)*100)
             keskpunkt = (x_koordinaat+50, y_koordinaat+50)
             raadius = 50
-            pygame.draw.circle(display, self.ringvärv, keskpunkt, raadius, 3)
+            pygame.draw.circle(display, nupuvärv, keskpunkt, raadius, 3)
 
     def hiire_asukoht(self):
         if pygame.mouse.get_pos()[0] > 50 and pygame.mouse.get_pos()[0] < 350 and pygame.mouse.get_pos()[1] > 50 and pygame.mouse.get_pos()[1] < 350:
@@ -49,12 +48,12 @@ class Mängulaud():
         else:
             return 0
 
-    def ringvoirist(self, ringvrist, ruut, display):
+    def ringvoirist(self, ringvrist, ruut, display, nupuvärv):
         if ringvrist == "ring":
-            self.ring(ruut, display)
+            self.ring(ruut, display, nupuvärv)
             return "rist"
         elif ringvrist == "rist":
-            self.rist(ruut, display)
+            self.rist(ruut, display, nupuvärv)
             return "ring"
 
     def m2ngl2bi(self, grid, display):
@@ -136,16 +135,15 @@ class Mängulaud():
         textRect.center = (self.pikkus // 2, 50)
         display.blit(textsurface, textRect)
 
-    def mäng(self, märk):
+    def mäng(self, märk, taustavärv, nupuvärv):
         pygame.display.set_caption("Trips-traps-trull")
         display = pygame.display.set_mode((self.laius, self.pikkus))
-        display.fill(self.taustvärv)
+        display.fill(taustavärv)
         pygame.draw.line(display, self.gridvärv, (150,50), (150,350), 5)
         pygame.draw.line(display, self.gridvärv, (250, 50), (250, 350), 5)
         pygame.draw.line(display, self.gridvärv, (50, 150), (350, 150), 5)
         pygame.draw.line(display, self.gridvärv, (50, 250), (350, 250), 5)
         ringvrist = märk
-        print(ringvrist)
         mängulõpp = False
         pygame.display.update()
         while self.lõpp == False:
@@ -156,8 +154,8 @@ class Mängulaud():
                     ruut = self.hiire_asukoht()
                     if self.grid[ruut-1] == False and mängulõpp == False:
                         pygame.display.update()
-                        self.ringvoirist(ringvrist, self.hiire_asukoht(),display)
-                        ringvrist = self.ringvoirist(ringvrist, self.hiire_asukoht(),display)
+                        self.ringvoirist(ringvrist, self.hiire_asukoht(),display, nupuvärv)
+                        ringvrist = self.ringvoirist(ringvrist, self.hiire_asukoht(),display, nupuvärv)
                         self.grid[ruut-1] = ringvrist
                         if self.m2ngl2bi(self.grid, display)[0] == True:
                             mängulõpp = True
@@ -167,7 +165,7 @@ class Mängulaud():
                     self.setGrid([False, False, False,
                                   False, False, False,
                                   False, False, False])
-                    self.mäng(märk)
+                    self.mäng(märk, taustavärv, nupuvärv)
 
                 if self.hiir_nupul() == "teine" and mängulõpp == True:
                     self.tagasi = True

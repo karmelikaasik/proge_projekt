@@ -7,11 +7,11 @@ pygame.init()
 laius = 400
 pikkus = 400
 
-def runmain(märk):
+def runmain(märk, taustavärv, nupuvärv):
     display = pygame.display.set_mode((laius, pikkus))
     pygame.display.set_caption("Peamenüü")
 
-    display.fill(hall)
+    display.fill(taustavärv)
 
     pygame.draw.rect(display, must, (100,200,200, 80))
     pygame.draw.rect(display, must, (100,300,200, 80))
@@ -53,11 +53,11 @@ def runmain(märk):
 
 
     lõpp = False
-    b = seaded(hall, valge, False, märk, "pvp")
+    b = seaded(taustavärv, nupuvärv, False, märk, "pvp")
     menüü = True
-    a = Mängulaud(400, 400, hall, punane, valge, valge, valge, [False, False, False,
-                                                                False, False, False,
-                                                                False, False, False], False, False)
+    a = Mängulaud(400, 400, punane, valge, valge, valge, [False, False, False,
+                                                          False, False, False,
+                                                          False, False, False], False, False)
 
     while lõpp == False:
         for event in pygame.event.get():
@@ -85,21 +85,21 @@ def runmain(märk):
                 if hiir_nupul() == "mängi":
                     menüü = False
                     if b.ristvring == "Alustab: O":
-                        a.mäng("ring")
+                        a.mäng("ring", b.taustvärv, b.nupuvärv)
                     elif b.ristvring == "Alustab: X":
-                        a.mäng("rist")
+                        a.mäng("rist", b.taustvärv, b.nupuvärv)
 
         if b.tagasi == True:
-            runmain(b.ristvring)
+            runmain(b.ristvring, b.taustvärv, b.nupuvärv)
             b.tagasi = False
             menüü = True
             pygame.display.update()
         if a.tagasi == True:
-            runmain(b.ristvring)
+            runmain(b.ristvring, b.taustvärv, b.nupuvärv)
             a.tagasi = False
             menüü = True
             pygame.display.update()
 
     pygame.quit()
 
-runmain("Alustab: X")
+runmain("Alustab: X", hall, valge)
