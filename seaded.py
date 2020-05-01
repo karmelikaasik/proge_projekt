@@ -23,14 +23,6 @@ class seaded:
     def setKesmängib(self, argument):
         self.kesmängib = argument
 
-    def ristvõiring(self):
-        if self.hiir_nupul() == "vaheta_nupp":
-            if self.ristvring == "Alustab: O":
-                self.setRistvring("Alustab: X")
-            elif self.ristvring == "Alustab: X":
-                self.setRistvring("Alustab: O")
-        return self.ristvring
-
     def hiir_nupul(self):
         mitmes = None
         mouse_x = pygame.mouse.get_pos()[0]
@@ -139,6 +131,8 @@ class seaded:
 
 
     def run(self):
+
+        pygame.font.init()
         display = pygame.display.set_mode((400, 400))
         pygame.display.set_caption("Seaded")
         display.fill(self.taustvärv)
@@ -146,8 +140,6 @@ class seaded:
         pygame.draw.rect(display, must, (10, 10, 20, 20))
 
         pygame.draw.rect(display, must, (60, 40, 280, 60))
-        pygame.font.init()
-
         smallerfont = pygame.font.SysFont('Times New Roman', 20)
         textsurface = smallerfont.render(("←"), False, valge)
         textRect = textsurface.get_rect()
@@ -177,6 +169,19 @@ class seaded:
         textRect.center = (self.pikkus // 2, 320)
         display.blit(tekst, textRect)
 
+        # Kas alustab rist või ring?
+        def alustab(self):
+            if self.ristvring == "Alustab: O":
+                self.ristvring = "Alustab: X"
+                alusta_märk = "Alustab: X"
+            elif self.ristvring == "Alustab: X":
+                self.ristvring = "Alustab: O"
+                alusta_märk = "Alustab: O"
+            alustab_tekst = myfont.render((self.ristvring), False, self.tekstivärv)
+            textRect = alustab_tekst.get_rect()
+            textRect.center = (self.pikkus // 2, 70)
+            display.blit(alustab_tekst, textRect)
+
 
         while self.lõpp == False:
             for event in pygame.event.get():
@@ -187,25 +192,61 @@ class seaded:
                     if self.hiir_nupul() == "tagasi":
                         self.tagasi = True
                         self.lõpp = True
+
                     if self.hiir_nupul() == "vaheta_nupp":
                         pygame.draw.rect(display, must, (60, 40, 280, 60))
-                        self.ristvõiring()
+                        alustab(self)
+
+                    if self.hiir_nupul() == "vaheta_taust":
+                        pygame.draw.rect(display, must, (60, 125, 280, 60))
+                        tekst = myfont.render("Taust: " + self.muudataustavärvi(self.converttovärv()[0]), False, self.tekstivärv)
+                        textRect = tekst.get_rect()
+                        textRect.center = (self.pikkus // 2, 155)
+                        display.blit(tekst, textRect)
+
+                        display = pygame.display.set_mode((400, 400))
+                        pygame.display.set_caption("Seaded")
+                        display.fill(self.taustvärv)
+                        myfont = pygame.font.SysFont('Comic Sans MS', 40)
+                        pygame.draw.rect(display, must, (10, 10, 20, 20))
+
+                        pygame.draw.rect(display, must, (60, 40, 280, 60))
+                        smallerfont = pygame.font.SysFont('Times New Roman', 20)
+                        textsurface = smallerfont.render(("←"), False, valge)
+                        textRect = textsurface.get_rect()
+                        textRect.center = (20, 20)
+                        display.blit(textsurface, textRect)
+
                         alustab_tekst = myfont.render((self.ristvring), False, self.tekstivärv)
                         textRect = alustab_tekst.get_rect()
                         textRect.center = (self.pikkus // 2, 70)
                         display.blit(alustab_tekst, textRect)
-                    if self.hiir_nupul() == "vaheta_taust":
+
                         pygame.draw.rect(display, must, (60, 125, 280, 60))
-                        tekst = myfont.render("Taust: "+ self.muudataustavärvi(self.converttovärv()[0]), False, self.tekstivärv)
+                        tekst = myfont.render("Taust: " + self.converttovärv()[0], False, self.tekstivärv)
                         textRect = tekst.get_rect()
                         textRect.center = (self.pikkus // 2, 155)
                         display.blit(tekst, textRect)
+
+                        pygame.draw.rect(display, must, (60, 210, 280, 60))
+                        tekst = myfont.render("Nupp: " + self.converttovärv()[1], False, self.tekstivärv)
+                        textRect = tekst.get_rect()
+                        textRect.center = (self.pikkus // 2, 237)
+                        display.blit(tekst, textRect)
+
+                        pygame.draw.rect(display, must, (60, 295, 280, 60))
+                        tekst = myfont.render("Mäng: " + self.kesmängib, False, self.tekstivärv)
+                        textRect = tekst.get_rect()
+                        textRect.center = (self.pikkus // 2, 320)
+                        display.blit(tekst, textRect)
+
                     if self.hiir_nupul() == "vaheta_nupuvärv":
                         pygame.draw.rect(display, must, (60, 210, 280, 60))
                         tekst = myfont.render("Nupp: " + self.muudanupuvärvi(self.converttovärv()[1]), False, self.tekstivärv)
                         textRect = tekst.get_rect()
                         textRect.center = (self.pikkus // 2, 237)
                         display.blit(tekst, textRect)
+
                     if self.hiir_nupul() == "vaheta_mänguviis":
                         pygame.draw.rect(display, must, (60, 295, 280, 60))
                         tekst = myfont.render("Mäng: " + self.kesmängivad(), False, self.tekstivärv)

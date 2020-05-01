@@ -1,12 +1,6 @@
 import pygame
 pygame.init()
-hall = [128,128,128]
-punane = [255,51,51]
-must = [0,0,0]
-sinine = [51,122,255]
-kollane = [255,255,51]
-roheline =[91,255, 51]
-valge = [255,255,255]
+from värvid import *
 
 class Mängulaud():
 
@@ -24,9 +18,6 @@ class Mängulaud():
 
     def setGrid(self, grid):
         self.grid = grid
-
-    def setMärk(self, märk):
-        self.märk = märk
 
     def rist(self, ruut, display):
         if ruut != 0:
@@ -101,7 +92,6 @@ class Mängulaud():
                 mängläbi = True
                 põhjus = "viik"
 
-
         return mängläbi, põhjus
 
     def hiir_nupul(self):
@@ -115,43 +105,36 @@ class Mängulaud():
                 mitmes = "teine"
         return mitmes
 
-    def kas_uuesti(self, display):
-        pygame.draw.rect(display, valge, (100, 100, 200, 150))
-        jah_kast = pygame.draw.rect(display, must, (130, 160, 60, 50))
-        ei_kast = pygame.draw.rect(display, must, (210, 160, 60, 50))
+    def kas_uuesti_vms(self, display):
+        pygame.draw.rect(display, must, (100, 100, 200, 150))
         pygame.font.init()
-        myfont = pygame.font.SysFont('Comic Sans MS', 20)
-        textsurface = myfont.render(("Kas mängida uuesti?"), False, must)
+        myfont = pygame.font.SysFont('Comic Sans MS', 30)
+        textsurface = myfont.render(("UUS MÄNG?"), False, valge)
         textRect = textsurface.get_rect()
         textRect.center = (self.pikkus // 2, 120)
         display.blit(textsurface, textRect)
         textsurface = myfont.render("JAH", False, valge)
-        textRect = jah_kast
+        textRect = pygame.draw.rect(display, must, (130, 160, 60, 50))
         display.blit(textsurface, textRect)
         textsurface = myfont.render("EI", False, valge)
-        textRect = ei_kast
+        textRect = pygame.draw.rect(display, must, (210, 160, 60, 50))
         display.blit(textsurface, textRect)
 
     def mängu_lõpp(self, ringvrist, display):
-        must = [0,0,0]
-        valge = [255,255,255]
-        punane = [255,51,51]
         pygame.font.init()
         myfont = pygame.font.SysFont('Comic Sans MS', 30)
         if self.m2ngl2bi(self.grid, display)[1] == "võitja":
             if ringvrist == "rist":
-                textsurface = myfont.render(("Võitja on "+ "ring"), False, must, valge)
+                textsurface = myfont.render(("Võitja on "+ "ring"), False, valge, must)
             if ringvrist == "ring":
-                textsurface = myfont.render(("Võitja on " + "rist"), False, must, valge)
+                textsurface = myfont.render(("Võitja on " + "rist"), False, valge, must)
         elif self.m2ngl2bi(self.grid, display)[1] == "viik":
-            textsurface = myfont.render(("VIIK"), False, must, valge)
+            textsurface = myfont.render(("VIIK"), False, valge, must)
         else:
             textsurface = myfont.render(("bigerror"), False, punane, valge)
         textRect = textsurface.get_rect()
         textRect.center = (self.pikkus // 2, 50)
         display.blit(textsurface, textRect)
-
-
 
     def mäng(self, märk):
         pygame.display.set_caption("Trips-traps-trull")
@@ -179,23 +162,18 @@ class Mängulaud():
                         if self.m2ngl2bi(self.grid, display)[0] == True:
                             mängulõpp = True
                             self.mängu_lõpp(ringvrist, display)
-                            self.kas_uuesti(display)
+                            self.kas_uuesti_vms(display)
                 if self.hiir_nupul() == "esimene" and mängulõpp == True:
                     self.setGrid([False, False, False,
                                   False, False, False,
                                   False, False, False])
                     self.mäng(märk)
-                    pygame.init()
 
                 if self.hiir_nupul() == "teine" and mängulõpp == True:
                     self.tagasi = True
                     self.lõpp = True
-                    pygame.init()
-
-
 
             pygame.display.update()
-
 
         pygame.quit()
 
