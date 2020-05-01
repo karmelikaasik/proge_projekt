@@ -1,13 +1,14 @@
 import pygame
 import time
-from Mängulaud import *
+from mängulaud_esialgne import *
 from seaded import *
 from värvid import *
 pygame.init()
 laius = 400
 pikkus = 400
 
-def runmain():
+
+def runmain(märk):
     display = pygame.display.set_mode((laius, pikkus))
     pygame.display.set_caption("Peamenüü")
 
@@ -51,7 +52,7 @@ def runmain():
         return mitmes
 
     lõpp = False
-    b = seaded(sinine, valge, False)
+    b = seaded(sinine, valge, False, märk)
     menüü = True
     while lõpp == False:
         for event in pygame.event.get():
@@ -62,29 +63,27 @@ def runmain():
                     lõpp = True
                 if hiir_nupul() == "seaded":
                     menüü = False
-                    print(menüü)
                     b.run()
                 if hiir_nupul() == "mängi":
                     menüü = False
-                    print(menüü)
+
+
+
                     a = Mängulaud(400, 400, hall, punane, valge, valge, valge, [False, False, False,
                                                                                 False, False, False,
                                                                                 False, False, False], False)
-                    print(b.ristvring)
-                    if b.ristvring == "Alustab: O":
-                        märk = "ring"
-                    elif b.ristvring == "Alustab: X":
-                        märk = "rist"
-                    a.mäng(märk)
+                    if b.ristvring == "Alustab: X":
+                        a.mäng("rist")
+                    elif b.ristvring == "Alustab: O":
+                        a.mäng("ring")
 
         pygame.display.update()
         if b.tagasi == True:
-            runmain()
-            print(11111111111111111111111111111111111111111111)
+            runmain(b.ristvring)
             b.tagasi = False
             menüü = True
             pygame.display.update()
 
     pygame.quit()
 
-runmain()
+runmain("Alustab: X")
