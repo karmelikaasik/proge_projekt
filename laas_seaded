@@ -3,17 +3,16 @@ from värvid import *
 
 pygame.init()
 
-
 class seaded:
 
-    def __init__(self, taustvärv, tekstivärv, lõpp):
+    def __init__(self, taustvärv, tekstivärv, lõpp, ristvring):
         self.taustvärv = taustvärv
         self.tekstivärv = tekstivärv
         self.lõpp = lõpp
         self.pikkus = 400
         self.laius = 400
         self.tagasi = False
-        self.ristvring = "Alustab: O"
+        self.ristvring = ristvring
 
     def run(self):
         display = pygame.display.set_mode((400, 400))
@@ -36,18 +35,21 @@ class seaded:
         textRect.center = (self.pikkus // 2, 80)
         display.blit(alustab_tekst, textRect)
 
+        # Kas alustab rist või ring?
         def alustab(self):
             if self.ristvring == "Alustab: O":
                 self.ristvring = "Alustab: X"
+                alusta_märk = "Alustab: X"
             elif self.ristvring == "Alustab: X":
                 self.ristvring = "Alustab: O"
+                alusta_märk = "Alustab: O"
             alustab_tekst = myfont.render((self.ristvring), False, punane)
             textRect = alustab_tekst.get_rect()
             textRect.center = (self.pikkus // 2, 80)
             display.blit(alustab_tekst, textRect)
 
 
-
+        # Kus on hiir?
         def hiir_nupul():
             mitmes = None
             mouse_x = pygame.mouse.get_pos()[0]
@@ -57,7 +59,7 @@ class seaded:
                     # Mäng
                     mitmes = "tagasi"
                 if mouse_y >= 50 and mouse_y <= 110 and mouse_x >= 70 and mouse_x <= 340 and pygame.mouse.get_pressed()[0] == 1:
-                    # Seaded
+                    # Vaheta
                     mitmes = "vaheta"
             return mitmes
 
