@@ -23,7 +23,7 @@ class seaded:
     def setKesmängib(self, argument):
         self.kesmängib = argument
 
-    def hiir_nupul(self):
+    def klikk_nupul(self):
         mitmes = None
         mouse_x = pygame.mouse.get_pos()[0]
         mouse_y = pygame.mouse.get_pos()[1]
@@ -42,8 +42,10 @@ class seaded:
 
     def kesmängivad(self):
         if self.kesmängib == "pvp":
-            self.setKesmängib("pvb")
-        elif self.kesmängib == "pvb":
+            self.setKesmängib("pvb (E)")
+        elif self.kesmängib == "pvb (E)":
+            self.setKesmängib("pvb (M)")
+        elif self.kesmängib == "pvb (M)":
             self.setKesmängib("pvp")
         return self.kesmängib
 
@@ -137,9 +139,9 @@ class seaded:
         pygame.display.set_caption("Seaded")
         display.fill(self.taustvärv)
         myfont = pygame.font.SysFont('Comic Sans MS', 40)
-        pygame.draw.rect(display, must, (10, 10, 20, 20))
+        pygame.draw.rect(display, button, (10, 10, 20, 20))
 
-        pygame.draw.rect(display, must, (60, 40, 280, 60))
+        pygame.draw.rect(display, button, (60, 40, 280, 60))
         smallerfont = pygame.font.SysFont('Times New Roman', 20)
         textsurface = smallerfont.render(("←"), False, valge)
         textRect = textsurface.get_rect()
@@ -151,19 +153,19 @@ class seaded:
         textRect.center = (self.pikkus // 2, 70)
         display.blit(alustab_tekst, textRect)
 
-        pygame.draw.rect(display, must, (60, 125, 280, 60))
+        pygame.draw.rect(display, button, (60, 125, 280, 60))
         tekst = myfont.render("Taust: "+ self.converttovärv()[0], False, self.tekstivärv)
         textRect = tekst.get_rect()
         textRect.center = (self.pikkus // 2, 155)
         display.blit(tekst, textRect)
 
-        pygame.draw.rect(display, must, (60, 210, 280, 60))
+        pygame.draw.rect(display, button, (60, 210, 280, 60))
         tekst = myfont.render("Nupp: " + self.converttovärv()[1], False, self.tekstivärv)
         textRect = tekst.get_rect()
         textRect.center = (self.pikkus // 2, 237)
         display.blit(tekst, textRect)
 
-        pygame.draw.rect(display, must, (60, 295, 280, 60))
+        pygame.draw.rect(display, button, (60, 295, 280, 60))
         tekst = myfont.render("Mäng: " + self.kesmängib, False, self.tekstivärv)
         textRect = tekst.get_rect()
         textRect.center = (self.pikkus // 2, 320)
@@ -188,17 +190,17 @@ class seaded:
                 if event.type == pygame.QUIT:
                     self.lõpp = True
                     pygame.quit()
-                if self.hiir_nupul() != None:
-                    if self.hiir_nupul() == "tagasi":
+                if self.klikk_nupul() != None:
+                    if self.klikk_nupul() == "tagasi":
                         self.tagasi = True
                         self.lõpp = True
 
-                    if self.hiir_nupul() == "vaheta_nupp":
-                        pygame.draw.rect(display, must, (60, 40, 280, 60))
+                    if self.klikk_nupul() == "vaheta_nupp":
+                        pygame.draw.rect(display, button, (60, 40, 280, 60))
                         alustab(self)
 
-                    if self.hiir_nupul() == "vaheta_taust":
-                        pygame.draw.rect(display, must, (60, 125, 280, 60))
+                    if self.klikk_nupul() == "vaheta_taust":
+                        pygame.draw.rect(display, button, (60, 125, 280, 60))
                         tekst = myfont.render("Taust: " + self.muudataustavärvi(self.converttovärv()[0]), False, self.tekstivärv)
                         textRect = tekst.get_rect()
                         textRect.center = (self.pikkus // 2, 155)
@@ -208,9 +210,9 @@ class seaded:
                         pygame.display.set_caption("Seaded")
                         display.fill(self.taustvärv)
                         myfont = pygame.font.SysFont('Comic Sans MS', 40)
-                        pygame.draw.rect(display, must, (10, 10, 20, 20))
+                        pygame.draw.rect(display, button, (10, 10, 20, 20))
 
-                        pygame.draw.rect(display, must, (60, 40, 280, 60))
+                        pygame.draw.rect(display, button, (60, 40, 280, 60))
                         smallerfont = pygame.font.SysFont('Times New Roman', 20)
                         textsurface = smallerfont.render(("←"), False, valge)
                         textRect = textsurface.get_rect()
@@ -222,37 +224,39 @@ class seaded:
                         textRect.center = (self.pikkus // 2, 70)
                         display.blit(alustab_tekst, textRect)
 
-                        pygame.draw.rect(display, must, (60, 125, 280, 60))
+                        pygame.draw.rect(display, button, (60, 125, 280, 60))
                         tekst = myfont.render("Taust: " + self.converttovärv()[0], False, self.tekstivärv)
                         textRect = tekst.get_rect()
                         textRect.center = (self.pikkus // 2, 155)
                         display.blit(tekst, textRect)
 
-                        pygame.draw.rect(display, must, (60, 210, 280, 60))
+                        pygame.draw.rect(display, button, (60, 210, 280, 60))
                         tekst = myfont.render("Nupp: " + self.converttovärv()[1], False, self.tekstivärv)
                         textRect = tekst.get_rect()
                         textRect.center = (self.pikkus // 2, 237)
                         display.blit(tekst, textRect)
 
-                        pygame.draw.rect(display, must, (60, 295, 280, 60))
+                        pygame.draw.rect(display, button, (60, 295, 280, 60))
                         tekst = myfont.render("Mäng: " + self.kesmängib, False, self.tekstivärv)
                         textRect = tekst.get_rect()
                         textRect.center = (self.pikkus // 2, 320)
                         display.blit(tekst, textRect)
 
-                    if self.hiir_nupul() == "vaheta_nupuvärv":
-                        pygame.draw.rect(display, must, (60, 210, 280, 60))
+                    if self.klikk_nupul() == "vaheta_nupuvärv":
+                        pygame.draw.rect(display, button, (60, 210, 280, 60))
                         tekst = myfont.render("Nupp: " + self.muudanupuvärvi(self.converttovärv()[1]), False, self.tekstivärv)
                         textRect = tekst.get_rect()
                         textRect.center = (self.pikkus // 2, 237)
                         display.blit(tekst, textRect)
 
-                    if self.hiir_nupul() == "vaheta_mänguviis":
-                        pygame.draw.rect(display, must, (60, 295, 280, 60))
+                    if self.klikk_nupul() == "vaheta_mänguviis":
+                        pygame.draw.rect(display, button, (60, 295, 280, 60))
                         tekst = myfont.render("Mäng: " + self.kesmängivad(), False, self.tekstivärv)
                         textRect = tekst.get_rect()
                         textRect.center = (self.pikkus // 2, 320)
                         display.blit(tekst, textRect)
+
+
 
             pygame.display.update()
     pygame.quit()

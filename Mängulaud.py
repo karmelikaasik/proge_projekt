@@ -1,6 +1,8 @@
 import pygame
 pygame.init()
 from värvid import *
+from bot import *
+import time
 
 class Mängulaud():
 
@@ -93,30 +95,34 @@ class Mängulaud():
 
         return mängläbi, põhjus
 
-    def hiir_nupul(self):
+    def klikk_nupul(self):
         mitmes = None
         mouse_x = pygame.mouse.get_pos()[0]
         mouse_y = pygame.mouse.get_pos()[1]
-        if mouse_y >= 160 and mouse_y <= 210:
-            if mouse_x >= 130 and mouse_x <= 190 and pygame.mouse.get_pressed()[0] == 1:
-                mitmes = "esimene"
-            if mouse_x >= 210 and mouse_x <= 270 and pygame.mouse.get_pressed()[0] == 1:
-                mitmes = "teine"
+        if mouse_x >= 100 and mouse_x <= 300:
+            if mouse_y >= 100 and mouse_y <= 150 and pygame.mouse.get_pressed()[0] == 1:
+                mitmes = "uusmäng"
+            if mouse_y >= 160 and mouse_y <= 210 and pygame.mouse.get_pressed()[0] == 1:
+                mitmes = "menüü"
+            if mouse_y >= 220 and mouse_y <= 270 and pygame.mouse.get_pressed()[0] == 1:
+                mitmes = "välju"
         return mitmes
 
     def kas_uuesti_vms(self, display):
-        pygame.draw.rect(display, must, (100, 100, 200, 150))
+        pygame.draw.rect(display, button, (100, 100, 200, 50))
         pygame.font.init()
         myfont = pygame.font.SysFont('Comic Sans MS', 30)
-        textsurface = myfont.render(("UUS MÄNG?"), False, valge)
+        textsurface = myfont.render(("UUS MÄNG"), False, valge)
         textRect = textsurface.get_rect()
         textRect.center = (self.pikkus // 2, 120)
         display.blit(textsurface, textRect)
-        textsurface = myfont.render("JAH", False, valge)
-        textRect = pygame.draw.rect(display, must, (130, 160, 60, 50))
+        textsurface = myfont.render("MENÜÜ", False, valge)
+        textRect = pygame.draw.rect(display, button, (100, 160, 200, 50))
+        textRect.center = (self.pikkus // 2, 180)
         display.blit(textsurface, textRect)
-        textsurface = myfont.render("EI", False, valge)
-        textRect = pygame.draw.rect(display, must, (210, 160, 60, 50))
+        textsurface = myfont.render("VÄLJU", False, valge)
+        textRect = pygame.draw.rect(display, button, (100, 220, 200, 50))
+        textRect.center = (self.pikkus // 2, 240)
         display.blit(textsurface, textRect)
 
     def mängu_lõpp(self, ringvrist, display):
@@ -135,7 +141,12 @@ class Mängulaud():
         textRect.center = (self.pikkus // 2, 50)
         display.blit(textsurface, textRect)
 
-    def mäng(self, märk, taustavärv, nupuvärv):
+    def mäng(self, märk, taustavärv, nupuvärv, kesmängib):
+        if märk == "rist":
+            eimärk = "ring"
+        else:
+            eimärk = "rist"
+        #print(self.tagasi)
         pygame.display.set_caption("Trips-traps-trull")
         display = pygame.display.set_mode((self.laius, self.pikkus))
         display.fill(taustavärv)
@@ -150,29 +161,54 @@ class Mängulaud():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.lõpp = True
+                    pygame.quit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     ruut = self.hiire_asukoht()
-                    if self.grid[ruut-1] == False and mängulõpp == False:
+
+                    if self.klikk_nupul() == "uusmäng" and mängulõpp == True:
+                        self.setGrid([False, False, False,
+                                      False, False, False,
+                                      False, False, False])
+                        self.mäng(märk, taustavärv, nupuvärv, kesmängib)
+                        mängulõpp = False
+                        self.tagasi = False
+                        self.lõpp = False
+
+                    elif self.klikk_nupul() == "välju" and mängulõpp == True:
+                        self.tagasi = False
+                        self.lõpp = True
+                        mängulõpp = False
+                        pygame.quit()
+
+                    elif self.klikk_nupul() == "menüü" and mängulõpp == True:
+                        self.tagasi = True
+                        self.lõpp = True
+                        mängulõpp = False
+
+                    elif self.grid[ruut-1] == False and mängulõpp == False:
                         pygame.display.update()
-                        self.ringvoirist(ringvrist, self.hiire_asukoht(),display, nupuvärv)
-                        ringvrist = self.ringvoirist(ringvrist, self.hiire_asukoht(),display, nupuvärv)
+                        self.ringvoirist(ringvrist, ruut, display, nupuvärv)
+                        ringvrist = self.ringvoirist(ringvrist, ruut, display, nupuvärv)
+
                         self.grid[ruut-1] = ringvrist
                         if self.m2ngl2bi(self.grid, display)[0] == True:
-                            mängulõpp = True
                             self.mängu_lõpp(ringvrist, display)
                             self.kas_uuesti_vms(display)
-                if self.hiir_nupul() == "esimene" and mängulõpp == True:
-                    self.setGrid([False, False, False,
-                                  False, False, False,
-                                  False, False, False])
-                    self.mäng(märk, taustavärv, nupuvärv)
+                            mängulõpp = True
+                        elif kesmängib != "pvp":
+                            ruut = main(self.grid, eimärk, kesmängib)
+                            print(ruut)
+                            pygame.display.update()
+                            self.ringvoirist(ringvrist, ruut, display, nupuvärv)
+                            ringvrist = self.ringvoirist(ringvrist, ruut, display, nupuvärv)
 
-                if self.hiir_nupul() == "teine" and mängulõpp == True:
-                    self.tagasi = True
-                    self.lõpp = True
+                            self.grid[ruut] = ringvrist
+                            if self.m2ngl2bi(self.grid, display)[0] == True:
+                                self.mängu_lõpp(ringvrist, display)
+                                self.kas_uuesti_vms(display)
+                                mängulõpp = True
+
+
 
             pygame.display.update()
-
-        pygame.quit()
-
 
