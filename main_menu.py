@@ -73,7 +73,7 @@ def runmain(märk, taustavärv, nupuvärv, kesmängib):
             # Hoverides tumedamaks
             if mängu_rect.collidepoint(pygame.mouse.get_pos()):
                 pygame.draw.rect(display, tumedamvärv(button), (100, 100, 200, 80))
-                textsurface = myfont.render(("PVP"), False, valge)
+                textsurface = myfont.render((b.kesmängib), False, valge)
                 textRect = textsurface.get_rect()
                 textRect.center = (pikkus // 2, 140)
                 display.blit(textsurface, textRect)
