@@ -1,2 +1,1 @@
-# Tere
-Gümnaasiumi programmeerimise kursuse käigus tehtud trips-traps-trulli mäng
+Gümnaasiumi programmeerimise kursuse käigus paaristööna tehtud trips-traps-trulli mäng
